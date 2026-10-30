@@ -3,144 +3,205 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des stagiaires</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supprimer un stagiaire</title>
+
     <style>
         body {
-            font-family: Arial;
-            background: #f1f5f9;
-            margin: 0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 30px;
         }
 
-        nav {
-            background: #2563eb;
-            padding: 18px;
+        .container {
+            background-color: white;
+            width: 400px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
         }
 
-        nav a {
+        h2 {
+            text-align: center;
+            color: #3225eb;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #2563eb;
             color: white;
-            text-decoration: none;
-            margin-right: 25px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .supprimer {
+            background-color: #dc2626;
+        }
+
+        .supprimer:hover {
+            background-color: #b91c1c;
+        }
+
+        #message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
         }
 
         table {
             width: 100%;
-            background: white;
-            border-collapse: collapse;
             margin-top: 25px;
+            border-collapse: collapse;
+            background: white;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 8px;
             text-align: center;
         }
 
         th {
-            background: #2563eb;
+            background-color: #2563eb;
             color: white;
-        }
-
-        button {
-            background: #dc2626;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            cursor: pointer;
         }
     </style>
 </head>
+
 <body>
 
-<script>
-    if (localStorage.getItem("connecte") !== "oui") {
-        window.location.href = "connexion.html";
-    }
-</script>
+    <div class="container">
+ <p>Bonjour dans notre plateforme</p>
+        <h2>Supprimer un stagiaire</h2>
 
-<nav>
-    <a href="ajout.html">Ajouter</a>
-    <a href="supprimer.html">Supprimer / Liste</a>
-    <a href="emploi.html">Emploi du temps</a>
-    <a href="#" onclick="deconnexion()">Déconnexion</a>
-</nav>
+        <form id="formSuppression">
 
-<h2>Liste des stagiaires</h2>
+            <label>Code du stagiaire :</label>
 
-<table>
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Action</th>
-        </tr>
-    </thead>
+            <input type="text" id="code" required>
 
-    <tbody id="tableau"></tbody>
-</table>
+            <button type="submit">Rechercher</button>
 
-<script>
-    function deconnexion() {
-        localStorage.removeItem("connecte");
-        window.location.href = "connexion.html";
-    }
+            <p id="message"></p>
 
-    function afficherStagiaires() {
+        </form>
 
+        <div id="resultat"></div>
+
+    </div>
+
+    <script>
+
+        // Récupérer les stagiaires enregistrés
         let stagiaires = JSON.parse(
-            localStorage.getItem("stagiaires") || "[]"
-        );
+            localStorage.getItem("stagiaires")
+        ) || [];
 
-        let tableau = document.getElementById("tableau");
+        let form = document.getElementById("formSuppression");
 
-        tableau.innerHTML = "";
+        form.addEventListener("submit", function(e) {
 
-        stagiaires.forEach(function(s, i) {
+            e.preventDefault();
 
-            tableau.innerHTML += `
-                <tr>
-                    <td>${s.code}</td>
-                    <td>${s.nom}</td>
-                    <td>${s.prenom}</td>
-                    <td>${s.email}</td>
-                    <td>
-                        <button onclick="supprimer(${i})">
-                            Supprimer
-                        </button>
-                    </td>
-                </tr>
+            let code = document.getElementById("code").value;
+
+            let message = document.getElementById("message");
+
+            let stagiaire = stagiaires.find(function(s) {
+                return s.code === code;
+            });
+
+            let resultat = document.getElementById("resultat");
+
+            if (!stagiaire) {
+
+                message.textContent = "Stagiaire introuvable !";
+                message.style.color = "red";
+
+                resultat.innerHTML = "";
+
+                return;
+            }
+
+            message.textContent = "Stagiaire trouvé !";
+            message.style.color = "green";
+
+            resultat.innerHTML = `
+                <table>
+                    <tr>
+                        <th>Code</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                    </tr>
+
+                    <tr>
+                        <td>${stagiaire.code}</td>
+                        <td>${stagiaire.nom}</td>
+                        <td>${stagiaire.prenom}</td>
+                        <td>${stagiaire.email}</td>
+                    </tr>
+                </table>
+
+                <button class="supprimer"
+                    onclick="supprimerStagiaire('${stagiaire.code}')">
+                    Confirmer la suppression
+                </button>
             `;
+
         });
 
-        if (stagiaires.length === 0) {
-            tableau.innerHTML =
-                "<tr><td colspan='5'>Aucun stagiaire enregistré</td></tr>";
-        }
-    }
+        function supprimerStagiaire(code) {
 
-    function supprimer(index) {
-
-        let stagiaires = JSON.parse(
-            localStorage.getItem("stagiaires") || "[]"
-        );
-
-        if (confirm("Voulez-vous supprimer ce stagiaire ?")) {
-
-            stagiaires.splice(index, 1);
-
-            localStorage.setItem(
-                "stagiaires",
-                JSON.stringify(stagiaires)
+            let confirmation = confirm(
+                "Voulez-vous vraiment supprimer ce stagiaire ?"
             );
 
-            afficherStagiaires();
-        }
-    }
+            if (confirmation) {
 
-    afficherStagiaires();
-</script>
+                stagiaires = stagiaires.filter(function(s) {
+                    return s.code !== code;
+                });
+
+                localStorage.setItem(
+                    "stagiaires",
+                    JSON.stringify(stagiaires)
+                );
+
+                document.getElementById("message").textContent =
+                    "Stagiaire supprimé avec succès !";
+
+                document.getElementById("message").style.color = "green";
+
+                document.getElementById("resultat").innerHTML = "";
+
+                document.getElementById("formSuppression").reset();
+
+            }
+
+        }
+
+    </script>
 
 </body>
 </html>

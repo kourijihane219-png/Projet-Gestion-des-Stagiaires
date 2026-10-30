@@ -3,116 +3,166 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Emploi du temps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Emploi du temps - Gestion des stagiaires</title>
+
     <style>
         body {
-            font-family: Arial;
-            background: #f1f5f9;
-            margin: 0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 30px;
         }
 
-        nav {
-            background: #2563eb;
-            padding: 18px;
+        .container {
+            background-color: white;
+            width: 80%;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
         }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-right: 25px;
+        h2 {
+            text-align: center;
+            color: #3225eb;
         }
 
         table {
             width: 100%;
-            background: white;
+            margin-top: 20px;
             border-collapse: collapse;
-            margin-top: 25px;
+            background: white;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
         }
 
         th {
-            background: #2563eb;
+            background-color: #2563eb;
             color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
         }
     </style>
 </head>
+
 <body>
 
-<script>
-    if (localStorage.getItem("connecte") !== "oui") {
-        window.location.href = "connexion.html";
-    }
-</script>
+    <div class="container">
+  <p>Bonjour dans notre plateforme</p>
+        <h2>Mon emploi du temps</h2>
 
-<nav>
-    <a href="ajout.html">Ajouter</a>
-    <a href="supprimer.html">Supprimer / Liste</a>
-    <a href="emploi.html">Emploi du temps</a>
-    <a href="#" onclick="deconnexion()">Déconnexion</a>
-</nav>
+        <table>
 
-<h2>Emploi du temps</h2>
+            <thead>
+                <tr>
+                    <th>Jour</th>
+                    <th>Heure</th>
+                    <th>Cours</th>
+                    <th>Salle</th>
+                </tr>
+            </thead>
 
-<table>
-    <thead>
-        <tr>
-            <th>Jour</th>
-            <th>08:30 - 10:30</th>
-            <th>10:30 - 12:30</th>
-            <th>14:00 - 16:00</th>
-        </tr>
-    </thead>
+            <tbody id="listeEmploi">
 
-    <tbody>
-        <tr>
-            <td>Lundi</td>
-            <td>JavaScript</td>
-            <td>React</td>
-            <td>PHP</td>
-        </tr>
+            </tbody>
 
-        <tr>
-            <td>Mardi</td>
-            <td>HTML / CSS</td>
-            <td>UML</td>
-            <td>MySQL</td>
-        </tr>
+        </table>
 
-        <tr>
-            <td>Mercredi</td>
-            <td>React</td>
-            <td>Redux</td>
-            <td>Git / GitHub</td>
-        </tr>
+        <button onclick="afficherEmploi()">
+            Actualiser
+        </button>
 
-        <tr>
-            <td>Jeudi</td>
-            <td>PHP</td>
-            <td>JavaScript</td>
-            <td>Projet Web</td>
-        </tr>
+    </div>
 
-        <tr>
-            <td>Vendredi</td>
-            <td>MySQL</td>
-            <td>Développement Web</td>
-            <td>Révision</td>
-        </tr>
-    </tbody>
-</table>
+    <script>
 
-<script>
-    function deconnexion() {
-        localStorage.removeItem("connecte");
-        window.location.href = "connexion.html";
-    }
-</script>
+        let emploi = [
+
+            {
+                jour: "Lundi",
+                heure: "08:30 - 10:30",
+                cours: "HTML / CSS",
+                salle: "Salle 1"
+            },
+
+            {
+                jour: "Mardi",
+                heure: "10:30 - 12:30",
+                cours: "JavaScript",
+                salle: "Salle 2"
+            },
+
+            {
+                jour: "Mercredi",
+                heure: "08:30 - 10:30",
+                cours: "Base de données",
+                salle: "Salle 3"
+            },
+
+            {
+                jour: "Jeudi",
+                heure: "13:30 - 15:30",
+                cours: "Programmation",
+                salle: "Salle 1"
+            },
+
+            {
+                jour: "Vendredi",
+                heure: "10:30 - 12:30",
+                cours: "Projet pratique",
+                salle: "Salle 2"
+            }
+
+        ];
+
+        function afficherEmploi() {
+
+            let liste = document.getElementById("listeEmploi");
+
+            liste.innerHTML = "";
+
+            emploi.forEach(function(e) {
+
+                let ligne = `
+                    <tr>
+                        <td>${e.jour}</td>
+                        <td>${e.heure}</td>
+                        <td>${e.cours}</td>
+                        <td>${e.salle}</td>
+                    </tr>
+                `;
+
+                liste.innerHTML += ligne;
+
+            });
+
+        }
+
+      
+        afficherEmploi();
+
+    </script>
 
 </body>
 </html>
