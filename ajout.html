@@ -1,29 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un stagiaire</title>
-
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            padding: 30px;
-        }
-
+        body { font-family: Arial; background: #f0f2f5; padding: 25px; }
+        nav { background: #2563eb; padding: 15px; }
+        nav a { color: white; margin-right: 20px; text-decoration: none; }
         .container {
-            background-color: white;
-            width: 400px;
-            margin: auto;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #ccc;
+            background: white; max-width: 500px;
+            margin: 30px auto; padding: 25px; border-radius: 10px;
         }
 
         h2 {
             text-align: center;
-            color: #3225eb;
+            color: #2563eb;
         }
 
         label {
@@ -37,53 +29,28 @@
             margin-top: 5px;
             box-sizing: border-box;
         }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #1d4ed8;
-        }
-
-        #message {
-            text-align: center;
-            font-weight: bold;
-        }
-
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #2563eb;
-            color: white;
-        }
+        button { background: #2563eb; color: white; border: 0; cursor: pointer; }
     </style>
 </head>
-
 <body>
+
+<script>
+    if (localStorage.getItem("connecte") !== "oui") {
+        window.location.href = "connexion.html";
+    }
+</script>
+
+<nav>
+    <a href="ajout.html">Ajouter</a>
+    <a href="liste.html">Liste des stagiaires</a>
+    <a href="emploi.html">Emploi du temps</a>
+    <a href="#" onclick="deconnexion()">Déconnexion</a>
+</nav>
 
     <div class="container">
 
         <h2>Ajouter un stagiaire</h2>
-         <p>Bonjour dans notre plateforme</p>
+
         <form id="formStagiaire">
 
             <label>Code :</label>
@@ -98,102 +65,60 @@
             <label>Email :</label>
             <input type="email" id="email" required>
 
-            <button type="submit">Ajouter</button>
+        <button type="submit">Ajouter</button>
+    </form>
 
-            <p id="message"></p>
+    <p id="message"></p>
+</div>
 
-        </form>
+<script>
+    function deconnexion() {
+        localStorage.removeItem("connecte");
+        window.location.href = "connexion.html";
+    }
 
-    </div>
+    let form = document.getElementById("formAjout");
 
-    <h2>Liste des stagiaires</h2>
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
 
-    <table>
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-            </tr>
-        </thead>
+        let stagiaires = JSON.parse(
+            localStorage.getItem("stagiaires") || "[]"
+        );
 
-        <tbody id="listeStagiaires">
-        </tbody>
-    </table>
+        let code = document.getElementById("code").value;
+        let nom = document.getElementById("nom").value;
+        let prenom = document.getElementById("prenom").value;
+        let email = document.getElementById("email").value;
 
-    <script>
+        let existe = stagiaires.some(s => s.code === code);
 
-        let stagiaires = [];
-
-        let form = document.getElementById("formStagiaire");
-
-        form.addEventListener("submit", function(e) {
-
-            e.preventDefault();
-
-            let code = document.getElementById("code").value;
-            let nom = document.getElementById("nom").value;
-            let prenom = document.getElementById("prenom").value;
-            let email = document.getElementById("email").value;
-
-            let message = document.getElementById("message");
-
-            // Vérifier si le code existe déjà
-            let existe = stagiaires.some(s => s.code === code);
-
-            if (existe) {
-                message.textContent = "Ce code existe déjà !";
-                message.style.color = "red";
-                return;
-            }
-
-            // Créer un nouveau stagiaire
-            let stagiaire = {
-                code: code,
-                nom: nom,
-                prenom: prenom,
-                email: email
-            };
-
-            // Ajouter au tableau
-            stagiaires.push(stagiaire);
-
-            // Afficher la liste
-            afficherStagiaires();
-
-            message.textContent = "Stagiaire ajouté avec succès !";
-            message.style.color = "green";
-
-            // Vider le formulaire
-            form.reset();
-
-        });
-
-        function afficherStagiaires() {
-
-            let liste = document.getElementById("listeStagiaires");
-
-            liste.innerHTML = "";
-
-            stagiaires.forEach(function(s) {
-
-                let ligne = `
-                    <tr>
-                        <td>${s.code}</td>
-                        <td>${s.nom}</td>
-                        <td>${s.prenom}</td>
-                        <td>${s.email}</td>
-                    </tr>
-                `;
-
-                liste.innerHTML += ligne;
-
-            });
-
+        if (existe) {
+            document.getElementById("message").textContent =
+                "Ce code existe déjà !";
+            return;
         }
 
-    </script>
+        let stagiaire = {
+            code: code,
+            nom: nom,
+            prenom: prenom,
+            email: email
+        };
+
+        stagiaires.push(stagiaire);
+
+        localStorage.setItem(
+            "stagiaires",
+            JSON.stringify(stagiaires)
+        );
+
+        document.getElementById("message").textContent =
+            "Stagiaire ajouté avec succès !";
+
+        form.reset();
+    });
+</script>
 
 </body>
 </html>
