@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Emploi du temps - Gestion des stagiaires</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            background-color: white;
+            width: 80%;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2563eb;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+ <p>Bonjour dans notre Plateforme</p>
+        <h2>Mon emploi du temps</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Jour</th>
+                    <th>Heure</th>
+                    <th>Cours</th>
+                    <th>Salle</th>
+                </tr>
+            </thead>
+
+            <tbody id="listeEmploi">
+
+            </tbody>
+
+        </table>
+
+        <button onclick="afficherEmploi()">
+            Actualiser
+        </button>
+
+    </div>
+
+    <script>
+
+        let emploi = [
+
+            {
+                jour: "Lundi",
+                heure: "08:30 - 10:30",
+                cours: "HTML / CSS",
+                salle: "Salle 1"
+            },
+
+            {
+                jour: "Mardi",
+                heure: "10:30 - 12:30",
+                cours: "JavaScript",
+                salle: "Salle 2"
+            },
+
+            {
+                jour: "Mercredi",
+                heure: "08:30 - 10:30",
+                cours: "Base de données",
+                salle: "Salle 3"
+            },
+
+            {
+                jour: "Jeudi",
+                heure: "13:30 - 15:30",
+                cours: "Programmation",
+                salle: "Salle 1"
+            },
+
+            {
+                jour: "Vendredi",
+                heure: "10:30 - 12:30",
+                cours: "Projet pratique",
+                salle: "Salle 2"
+            }
+
+        ];
+
+        function afficherEmploi() {
+
+            let liste = document.getElementById("listeEmploi");
+
+            liste.innerHTML = "";
+
+            emploi.forEach(function(e) {
+
+                let ligne = `
+                    <tr>
+                        <td>${e.jour}</td>
+                        <td>${e.heure}</td>
+                        <td>${e.cours}</td>
+                        <td>${e.salle}</td>
+                    </tr>
+                `;
+
+                liste.innerHTML += ligne;
+
+            });
+
+        }
+
+      
+        afficherEmploi();
+
+    </script>
+
+</body>
+</html>
