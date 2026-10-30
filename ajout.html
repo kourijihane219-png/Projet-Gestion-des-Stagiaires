@@ -5,31 +5,44 @@
     <meta charset="UTF-8">
     <title>Ajouter un stagiaire</title>
     <style>
-        body { font-family: Arial; background: #f0f2f5; padding: 25px; }
-        nav { background: #2563eb; padding: 15px; }
-        nav a { color: white; margin-right: 20px; text-decoration: none; }
+        body {
+            font-family: Arial;
+            background: #f1f5f9;
+            margin: 0;
+        }
+
+        nav {
+            background: #2563eb;
+            padding: 18px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 25px;
+        }
+
         .container {
-            background: white; max-width: 500px;
-            margin: 30px auto; padding: 25px; border-radius: 10px;
+            background: white;
+            width: 400px;
+            margin: 40px auto;
+            padding: 25px;
+            border-radius: 10px;
         }
 
-        h2 {
-            text-align: center;
-            color: #2563eb;
-        }
-
-        label {
-            display: block;
-            margin-top: 12px;
-        }
-
-        input {
+        input, button {
             width: 100%;
             padding: 10px;
-            margin-top: 5px;
+            margin: 8px 0;
             box-sizing: border-box;
         }
-        button { background: #2563eb; color: white; border: 0; cursor: pointer; }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -42,28 +55,19 @@
 
 <nav>
     <a href="ajout.html">Ajouter</a>
-    <a href="liste.html">Liste des stagiaires</a>
+    <a href="supprimer.html">Supprimer / Liste</a>
     <a href="emploi.html">Emploi du temps</a>
     <a href="#" onclick="deconnexion()">Déconnexion</a>
 </nav>
 
-    <div class="container">
+<div class="container">
+    <h2>Ajouter un stagiaire</h2>
 
-        <h2>Ajouter un stagiaire</h2>
-
-        <form id="formStagiaire">
-
-            <label>Code :</label>
-            <input type="text" id="code" required>
-
-            <label>Nom :</label>
-            <input type="text" id="nom" required>
-
-            <label>Prénom :</label>
-            <input type="text" id="prenom" required>
-
-            <label>Email :</label>
-            <input type="email" id="email" required>
+    <form id="formAjout">
+        <input type="text" id="code" placeholder="Code" required>
+        <input type="text" id="nom" placeholder="Nom" required>
+        <input type="text" id="prenom" placeholder="Prénom" required>
+        <input type="email" id="email" placeholder="Email" required>
 
         <button type="submit">Ajouter</button>
     </form>
@@ -77,9 +81,9 @@
         window.location.href = "connexion.html";
     }
 
-    let form = document.getElementById("formAjout");
+    document.getElementById("formAjout")
+    .addEventListener("submit", function(e) {
 
-    form.addEventListener("submit", function(e) {
         e.preventDefault();
 
         let stagiaires = JSON.parse(
@@ -116,7 +120,11 @@
         document.getElementById("message").textContent =
             "Stagiaire ajouté avec succès !";
 
-        form.reset();
+        this.reset();
+
+        setTimeout(function() {
+            window.location.href = "supprimer.html";
+        }, 1000);
     });
 </script>
 
